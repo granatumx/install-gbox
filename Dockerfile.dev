@@ -1,0 +1,56 @@
+FROM ubuntu:latest
+MAINTAINER "granatumx" granatumx@github.com
+
+ENV TERM=xterm-256color
+ENV PATH="$PATH:."
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV TZ America/New_York
+
+RUN apt-get update
+RUN apt-get install -y apt-utils
+RUN apt-get install -y build-essential 
+RUN apt-get install -y bash-completion
+RUN apt-get install -y git 
+RUN apt-get install -y vim
+RUN apt-get install -y curl
+
+# Install node, npm, etc
+RUN apt-get install -y nodejs
+RUN apt-get install -y npm 
+RUN npm install -g n
+RUN n stable
+RUN npm install -g depcheck typescript npm-check-updates
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update  
+RUN apt-get install -y yarn
+
+# Allow granatumx to kick off docker containers itself
+RUN apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - 
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+RUN apt-get update
+RUN apt-get install -y docker-ce-cli
+
+# Need to make structure for granatum
+# RUN mkdir -p /data
+# RUN mkdir -p /var/granatum
+
+# Copy source over so that we can proceed with build inside of docker
+RUN mkdir -p /usr/src/gx
+WORKDIR /usr/src/gx
+
+# Build software inside of docker image
+
+RUN npm install -g typescript-json-schema
+
+COPY . .
+
+RUN npm install pkg
+RUN mkdir ./jsonSchemas
+RUN make
+
+RUN yarn install
+RUN yarn build 
