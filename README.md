@@ -6,7 +6,7 @@
 
 You mainly need a working copy of [Docker](http://docker.com). It is used
 exclusively to manage system configurations for running numerous tools
-across numerous platforms. There are some pros and cons to this approach.
+across numerous platforms.
 
 ### Installation
 
