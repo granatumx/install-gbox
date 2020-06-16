@@ -16,3 +16,6 @@ WORKDIR /usr/src/gx
 # Just need jsonschemas and binary for installation
 COPY jsonSchemas ./jsonSchemas
 COPY installGbox .
+
+ARG DATABASE_URL=postgres://postgres:12qw@192.168.1.101:5432/granatum
+ENV DATABASE_URL=$DATABASE_URL

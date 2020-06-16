@@ -35,7 +35,7 @@ if(listYAML == undefined && gboxDir == undefined && recipesDir == undefined) {
 
 const knex = await Knex({
   client: 'pg',
-  connection: process.env.DATABASE_URL || 'postgres://postgres:12qw@localhost:5433/granatum',
+  connection: process.env.DATABASE_URL || 'postgres://postgres:12qw@192.168.1.101:5432/granatum',
 });
 
 if(listYAML) {
