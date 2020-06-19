@@ -19,7 +19,12 @@ it does not exist locally which facilitates installing on a server.
 ```
 source <( docker run --rm -it granatumx/scripts:1.0.0 gx.sh )
 ```
+On a Mac, use these commands instead
 
+```
+$ docker run --rm -it granatumx/scripts:1.0.0 gx.sh > gx.sh
+$ source gx.sh
+```
 This command makes `gx` available. You can simply run `gx` to obtain a list of scripts available.
 
 The GranatumX database should be running to install gboxes. The gbox sources do not need to be installed.
@@ -27,6 +32,11 @@ A gbox has a gbox.tgz compressed tar file in the root directory which the instal
 to deposit the preferences on the database. Since these gboxes are in fact docker images, they will be
 pulled if they do not exist locally on the system. Convenience scripts are provided for installing specific gboxes.
 
+```
+$ gx runGXdatabase.sh  # To start running the database
+$ gx initGXdatabase.sh # Initialize database
+```
+Now that the database is running and initialized, you can install gboxes
 
 ```
 $ gx run.sh                     # Will start the database, taskrunner, and webapp
