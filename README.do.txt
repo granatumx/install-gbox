@@ -34,8 +34,12 @@ $ gx installStandardGboxes.sh   # Install standard gboxes (install specific ones
 # If you add a step, you should see the installed gboxes available.
 !ec
 
-===== Notes =====
+===== Building =====
 
 The build is a two-stage process. First the development environment is built which runs `pkg` to create
 an executable. In the second part of the process, the run environment is created that holds just the
 executable and some schemas (no need for the 600MB+ of dependencies installed).
+
+!bc sys
+$ make docker
+!ec

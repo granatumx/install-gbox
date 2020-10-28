@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-MAINTAINER "granatumx" granatumx@github.com
+MAINTAINER "granatumx" lana.garmire.group@gmail.com
 
 ENV TERM=xterm-256color
 ENV PATH="$PATH:."
@@ -50,7 +50,7 @@ RUN npm install -g typescript-json-schema
 COPY . .
 
 RUN npm install pkg
-RUN mkdir ./jsonSchemas
+RUN mkdir -p ./jsonSchemas
 RUN make
 
 RUN yarn install
