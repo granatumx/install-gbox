@@ -29,6 +29,9 @@ export default async (knex: Knex, recipeSpec: IRecipeSpec) => {
       .update({
         meta: JSON.stringify(recipeSpec.meta),
       });
+
+    console.log(chalk.greenBright(`---> Removing gbox links for ${recipeSpec.meta.title}`));
+    await knex('recipe_gbox').delete().where({ recipe_id: recipeSpec.id });
   } else {
     console.log(chalk.greenBright(`---> ${recipeSpec.meta.title} (new)`));
 

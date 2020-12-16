@@ -7,6 +7,7 @@ import Knex from 'knex';
 import * as path from 'path';
 import {cli, option} from 'typed-cli';
 import installOnePackage from './installOnePackage';
+import removeOnePackage from './removeOnePackage';
 import installOneRecipe from './installOneRecipe';
 
 (async () => {
@@ -20,12 +21,15 @@ const {options} = cli({
       .description("Location of gbox itself, must contain package.yaml"),
     recipesDir: option.string
       .alias('r')
-      .description("Location of recipe directory")
+      .description("Location of recipe directory"),
+    remove: option.string
+      .alias('rm')
+      .description("Remove all gboxes in the specified package.")
   },
   description : "installs gboxes and/or recipes"
 });
 
-const {listYAML, gboxDir, recipesDir} = options;
+const {listYAML, gboxDir, recipesDir, remove} = options;
 
 if(listYAML == undefined && gboxDir == undefined && recipesDir == undefined) {
   console.log(chalk.redBright(`==> Error in usage, require one of listYAML, gboxDir, or recipesDir`));
@@ -33,9 +37,14 @@ if(listYAML == undefined && gboxDir == undefined && recipesDir == undefined) {
   process.exit(1);
 }
 
+if(remove != undefined && gboxDir == undefined) {
+  console.log(chalk.redBright('==> You must specify a gbox package to remove'));
+  process.exit(1);
+}
+
 const knex = await Knex({
   client: 'pg',
-  connection: process.env.DATABASE_URL || 'postgres://postgres:12qw@192.168.1.101:5432/granatum',
+  connection: process.env.DATABASE_URL || 'postgres://postgres:12qw@192.168.4.101:5432/granatum',
 });
 
 if(listYAML) {
@@ -54,7 +63,11 @@ if(gboxDir) {
   const packageSpecPath = path.resolve(fullPath, 'package.yaml');
   console.log(chalk.blueBright(`===>   Loading package spec from ${packageSpecPath}`));
   const packageSpec = yaml.safeLoad(readFileSync(packageSpecPath, 'utf8')) as IPackageSpec;
-  await installOnePackage(knex, fullPath, packageSpec, { verbose: true });
+  if(remove != undefined) {
+    await removeOnePackage(knex, fullPath, packageSpec, { verbose: true });
+  } else {
+    await installOnePackage(knex, fullPath, packageSpec, { verbose: true });
+  }
 } 
 if(recipesDir) {
   const recipeYamls = glob.sync(`${recipesDir}/*.yaml`);
